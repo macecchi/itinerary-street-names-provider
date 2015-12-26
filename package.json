@@ -4,7 +4,9 @@
   "description": "Populates itinerary database with street names",
   "main": "index.js",
   "dependencies": {
-    "mongodb": "^2.1.2"
+    "googlemaps": "^1.0.2",
+    "mongodb": "^2.1.2",
+    "sleep": "^3.0.0"
   },
   "devDependencies": {},
   "scripts": {

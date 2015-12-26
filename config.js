@@ -13,5 +13,8 @@ module.exports = {
     },
     schema: {
         itineraryCollection: 'itinerary'
+    },
+    GoogleMaps: {
+        key: 'AIzaSyBipo-V2cBGUWLbfwEcihDx5H8ZO89upuE'
     }
 };
