@@ -61,24 +61,13 @@ function main() {
         }
 
         try {
-            var result = wait.for(Maps.reverseGeocode, spot);
+            var streetName = wait.for(Maps.reverseGeocode, spot);
             requests++;
 
-            if (result.status === 'OK') {
-                // console.dir(result.results[0])
-                var streetName = result.results[0].address_components[1].long_name;
-                matchesCache[spotKey] = streetName;
-                var added = addToItinerary(streetName);
-                console.log(streetName);
-                if (added) console.log('Partial itinerary: ', streets);
-            }
-            else if (result.status === 'OVER_QUERY_LIMIT' || result.status === 'REQUEST_DENIED') {
-                console.log('[ERROR]', result.error_message, '(' + result.status + ')');
-                process.exit(1);
-            }
-            else {
-                console.log('[WARNING]', result.error_message, '(' + result.status + ')');
-            }
+            matchesCache[spotKey] = streetName;
+            var added = addToItinerary(streetName);
+            console.log(streetName);
+            if (added) console.log('Partial itinerary: ', streets);           
         } catch (err) {
             console.log('[ERROR]', err);
             process.exit(2);
