@@ -15,15 +15,9 @@ var lastStreet = '';
 var lastStreetCount = 0;
 
 function addToItinerary(street) {
-    if (lastStreet === '') {
-        lastStreet = street;
-        lastStreetCount++;
-        return false;
-    }
-    
     if (lastStreet === street) {
         lastStreetCount++;
-        if (lastStreetCount == 5) {
+        if (lastStreetCount == 4) {
             if (streets.length == 0 || streets[streets.length-1] !== street) {
                 streets.push(street);
                 return true;
@@ -32,7 +26,7 @@ function addToItinerary(street) {
     }
     else {
         lastStreet = street;
-        lastStreetCount = 0;
+        lastStreetCount = 1;
     }
     
     return false;
@@ -60,7 +54,7 @@ function main() {
             var result = wait.for(Maps.reverseGeocode, spot);
             requests++;
 
-            if (result.status == 'OK') {
+            if (result.status === 'OK') {
                 // console.dir(result.results[0])
                 var streetName = result.results[0].address_components[1].long_name;
                 matchesCache[spotKey] = streetName;
@@ -68,9 +62,12 @@ function main() {
                 console.log(streetName);
                 if (added) console.log('Partial itinerary: ', streets); 
             }
-            else {
+            else if (result.status === 'OVER_QUERY_LIMIT' || result.status === 'REQUEST_DENIED') {
                 console.log('[ERROR]', result.error_message, '(' + result.status + ')');
                 process.exit(1);
+            }
+            else {
+                console.log('[WARNING]', result.error_message, '(' + result.status + ')');
             }
         } catch (err) {
             console.log('[ERROR]', err);
