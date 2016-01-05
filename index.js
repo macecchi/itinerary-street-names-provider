@@ -11,14 +11,31 @@ var searchedLine = process.argv[process.argv.length - 1];
 assert(!isNaN(searchedLine), 'Missing bus line parameter.');
 
 var streets = [];
+var lastStreet = '';
+var lastStreetCount = 0;
 
 function addToItinerary(street) {
-    if (streets.length > 0 && streets[streets.length-1] === street) {
+    if (lastStreet === '') {
+        lastStreet = street;
+        lastStreetCount++;
         return false;
     }
     
-    streets.push(street);
-    return true;
+    if (lastStreet === street) {
+        lastStreetCount++;
+        if (lastStreetCount == 5) {
+            if (streets.length == 0 || streets[streets.length-1] !== street) {
+                streets.push(street);
+                return true;
+            }
+         }
+    }
+    else {
+        lastStreet = street;
+        lastStreetCount = 0;
+    }
+    
+    return false;
 }
 
 function main() {
@@ -28,18 +45,30 @@ function main() {
     var spots = wait.for(RioBus.findItinerary, searchedLine);
     console.log('Loaded itinerary.');
 
+    console.log('Requesting reverse geocodes...');
     for (var spot of spots) {
-        var result = wait.for(Maps.reverseGeocode, spot);
+        try {
+            var result = wait.for(Maps.reverseGeocode, spot);
 
-        if (result.status == 'OK') {
-            var streetName = result.results[0].address_components[1].short_name;
-            var added = addToItinerary(streetName);
+            if (result.status == 'OK') {
+                // console.dir(result.results[0])
+                var streetName = result.results[0].address_components[1].long_name;
+                var added = addToItinerary(streetName);
                 console.log(streetName);
-            
-        } else {
-            console.log('Error', result);
+                if (added) console.log('adicionou', streets); 
+            }
+            else {
+                console.log('[ERROR]', result.error_message, '(' + result.status + ')');
+                process.exit(1);
+            }
+        } catch (err) {
+            console.log('[ERROR]', err);
+            process.exit(2);
         }
     }
+    
+    console.log('Done!', streets);
+    process.exit(0);
 }
 
 wait.launchFiber(main);
