@@ -1,17 +1,32 @@
 {
   "name": "itinerary-street-names-provider",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Populates itinerary database with street names",
   "main": "index.js",
   "dependencies": {
     "googlemaps": "^1.0.2",
     "mongodb": "^2.1.2",
-    "sleep": "^3.0.0"
+    "wait.for": "^0.6.6"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Mario Cecchi",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macecchi/itinerary-street-names-provider.git"
+  },
+  "keywords": [
+    "riobus",
+    "rio",
+    "bus",
+    "bus",
+    "itinerary"
+  ],
+  "bugs": {
+    "url": "https://github.com/macecchi/itinerary-street-names-provider/issues"
+  },
+  "homepage": "https://github.com/macecchi/itinerary-street-names-provider#readme"
 }
