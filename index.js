@@ -45,17 +45,28 @@ function main() {
     var spots = wait.for(RioBus.findItinerary, searchedLine);
     console.log('Loaded itinerary.');
 
+    var matchesCache = {};
+    var skipped = 0, requests = 0;
+
     console.log('Requesting reverse geocodes...');
     for (var spot of spots) {
+        var spotKey = JSON.stringify(spot);
+        if (spotKey in matchesCache) {
+            skipped++;
+            continue;
+        }
+        
         try {
             var result = wait.for(Maps.reverseGeocode, spot);
+            requests++;
 
             if (result.status == 'OK') {
                 // console.dir(result.results[0])
                 var streetName = result.results[0].address_components[1].long_name;
+                matchesCache[spotKey] = streetName;
                 var added = addToItinerary(streetName);
                 console.log(streetName);
-                if (added) console.log('adicionou', streets); 
+                if (added) console.log('Partial itinerary: ', streets); 
             }
             else {
                 console.log('[ERROR]', result.error_message, '(' + result.status + ')');
@@ -67,7 +78,9 @@ function main() {
         }
     }
     
-    console.log('Done!', streets);
+    console.log('Done!\n', streets);
+    console.log('Requests: ' + requests);
+    console.log('Skipped spots: ' + skipped);
     process.exit(0);
 }
 
