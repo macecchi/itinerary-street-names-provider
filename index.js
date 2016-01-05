@@ -36,7 +36,7 @@ function addToItinerary(street) {
 function exportItinerary(line, itinerary) {
     fs.writeFile('itineraries/' + line + '.json', JSON.stringify(itinerary), function (err, data) {
         if (err) {
-            return console.log(err);
+            console.log(err);
         }
         console.log('Exported');
     });
@@ -62,12 +62,17 @@ function main() {
 
         try {
             var streetName = wait.for(Maps.reverseGeocode, spot);
-            requests++;
-
             matchesCache[spotKey] = streetName;
-            var added = addToItinerary(streetName);
-            console.log(streetName);
-            if (added) console.log('Partial itinerary: ', streets);           
+            requests++;
+            
+            if (streetName !== '') {
+                var added = addToItinerary(streetName);
+                console.log(streetName);
+                if (added) console.log('Partial itinerary: ', streets);
+            }
+            else {
+                console.log('[WARNING] Street name returned empty.');
+            }  
         } catch (err) {
             console.log('[ERROR]', err);
             process.exit(2);
