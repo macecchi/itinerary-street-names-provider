@@ -19,9 +19,7 @@ function reverseGeocode(coordinates, callback) {
 	  "location_type": "ROOFTOP"
 	};
 
-	gmAPI.reverseGeocode(reverseGeocodeParams, function(err, result){
-		callback(result);
-	});
+	gmAPI.reverseGeocode(reverseGeocodeParams, callback);
 }
 
 module.exports = {
