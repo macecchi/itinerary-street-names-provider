@@ -33,12 +33,14 @@ function addToItinerary(street) {
     return false;
 }
 
-function exportItinerary(line, itinerary) {
-    fs.writeFile('itineraries/' + line + '.json', JSON.stringify(itinerary), function (err, data) {
+function exportItinerary(line, data) {
+    fs.writeFile('itineraries/' + line + '.json', JSON.stringify(data, null, 4), function (err) {
         if (err) {
             console.log(err);
         }
-        console.log('Exported');
+        else {
+            console.log('Exported.');
+        }
     });
 }
 
