@@ -18,12 +18,12 @@ var lastStreetCount = 0;
 var skipped = 0, requests = 0;
 var matchesCache = {};
 
-function addToItinerary(street) {
+function addToItinerary(street, returning) {
     if (lastStreet === street) {
         lastStreetCount++;
         if (lastStreetCount == 4) {
             if (streets.length == 0 || streets[streets.length - 1] !== street) {
-                streets.push(street);
+                streets.push({ location: street, returning: returning });
                 return true;
             }
         }
@@ -71,10 +71,11 @@ function main() {
     for (var spot of spots) {
         try {
             var streetName = findStreetName(spot); 
+            var returning = spot.returning;
             
             if (streetName !== '') {
-                var added = addToItinerary(streetName);
-                console.log(streetName);
+                var added = addToItinerary(streetName, returning);
+                console.log(streetName + (returning ? ' (returning)' : ''));
                 if (added) console.log('Partial itinerary: ', streets);
             }
             else {

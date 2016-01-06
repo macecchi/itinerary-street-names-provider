@@ -1,42 +1,178 @@
 [
-    "Linha Amarela",
-    "Avenida Bento Ribeiro Dantas",
-    "Rua Lobo Carneiro",
-    "Rua Milton Santos",
-    "Avenida Horácio Macedo",
-    "Praça Giulio Massarani",
-    "Avenida Athos da Silveira Ramos",
-    "Praça Giulio Massarani",
-    "Avenida Horácio Macedo",
-    "Praça Samira Nahid Mesquita",
-    "Avenida Pedro Calmon",
-    "Praça Samira Nahid Mesquita",
-    "Avenida Horácio Macedo",
-    "Praça Giulio Massarani",
-    "Avenida Horácio Macedo",
-    "Avenida Carlos Chagas Filho",
-    "Rua Professor Rodolpho Paulo Rocco",
-    "Terminal Integrado da UFRJ",
-    "Avenida Athos da Silveira Ramos",
-    "Praça Giulio Massarani",
-    "Avenida Horácio Macedo",
-    "Praça Samira Nahid Mesquita",
-    "Avenida Pedro Calmon",
-    "Praça Samira Nahid Mesquita",
-    "Avenida Horácio Macedo",
-    "Praça Giulio Massarani",
-    "Avenida Horácio Macedo",
-    "Avenida Carlos Chagas Filho",
-    "Rua Professor Rodolpho Paulo Rocco",
-    "Terminal Integrado da UFRJ",
-    "Rua Professor Rodolpho Paulo Rocco",
-    "Avenida Carlos Chagas Filho",
-    "Avenida Horácio Macedo",
-    "Rua Maria Paulina de Souza",
-    "Rua Lobo Carneiro",
-    "Ponte Oswaldo Cruz",
-    "Avenida Bento Ribeiro Dantas",
-    "Linha Amarela",
-    "Rua Leopoldo Bulhões",
-    "Linha Amarela"
+    {
+        "location": "Linha Amarela",
+        "returning": false
+    },
+    {
+        "location": "Linha Amarela",
+        "returning": false
+    },
+    {
+        "location": "Avenida Bento Ribeiro Dantas",
+        "returning": false
+    },
+    {
+        "location": "Avenida Bento Ribeiro Dantas",
+        "returning": false
+    },
+    {
+        "location": "Rua Lobo Carneiro",
+        "returning": false
+    },
+    {
+        "location": "Rua Milton Santos",
+        "returning": false
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": false
+    },
+    {
+        "location": "Praça Giulio Massarani",
+        "returning": false
+    },
+    {
+        "location": "Avenida Athos da Silveira Ramos",
+        "returning": false
+    },
+    {
+        "location": "Praça Giulio Massarani",
+        "returning": false
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": false
+    },
+    {
+        "location": "Praça Samira Nahid Mesquita",
+        "returning": false
+    },
+    {
+        "location": "Praça Samira Nahid Mesquita",
+        "returning": false
+    },
+    {
+        "location": "Avenida Pedro Calmon",
+        "returning": false
+    },
+    {
+        "location": "Praça Samira Nahid Mesquita",
+        "returning": false
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": false
+    },
+    {
+        "location": "Praça Giulio Massarani",
+        "returning": false
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": false
+    },
+    {
+        "location": "Avenida Carlos Chagas Filho",
+        "returning": false
+    },
+    {
+        "location": "Rua Professor Rodolpho Paulo Rocco",
+        "returning": false
+    },
+    {
+        "location": "Terminal Integrado da UFRJ",
+        "returning": false
+    },
+    {
+        "location": "Avenida Athos da Silveira Ramos",
+        "returning": true
+    },
+    {
+        "location": "Praça Giulio Massarani",
+        "returning": true
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": true
+    },
+    {
+        "location": "Praça Samira Nahid Mesquita",
+        "returning": true
+    },
+    {
+        "location": "Praça Samira Nahid Mesquita",
+        "returning": true
+    },
+    {
+        "location": "Avenida Pedro Calmon",
+        "returning": true
+    },
+    {
+        "location": "Praça Samira Nahid Mesquita",
+        "returning": true
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": true
+    },
+    {
+        "location": "Praça Giulio Massarani",
+        "returning": true
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": true
+    },
+    {
+        "location": "Avenida Carlos Chagas Filho",
+        "returning": true
+    },
+    {
+        "location": "Rua Professor Rodolpho Paulo Rocco",
+        "returning": true
+    },
+    {
+        "location": "Terminal Integrado da UFRJ",
+        "returning": true
+    },
+    {
+        "location": "Rua Professor Rodolpho Paulo Rocco",
+        "returning": true
+    },
+    {
+        "location": "Avenida Carlos Chagas Filho",
+        "returning": true
+    },
+    {
+        "location": "Avenida Horácio Macedo",
+        "returning": true
+    },
+    {
+        "location": "Rua Maria Paulina de Souza",
+        "returning": true
+    },
+    {
+        "location": "Rua Lobo Carneiro",
+        "returning": true
+    },
+    {
+        "location": "Ponte Oswaldo Cruz",
+        "returning": true
+    },
+    {
+        "location": "Avenida Bento Ribeiro Dantas",
+        "returning": true
+    },
+    {
+        "location": "Linha Amarela",
+        "returning": true
+    },
+    {
+        "location": "Rua Leopoldo Bulhões",
+        "returning": true
+    },
+    {
+        "location": "Linha Amarela",
+        "returning": true
+    }
 ]
