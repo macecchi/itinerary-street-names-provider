@@ -34,8 +34,10 @@ function addToItinerary(street) {
 }
 
 function exportItinerary(line, data, callback) {
+    // Save to file
     var dataString = JSON.stringify(data, null, 4);
     fs.writeFile('itineraries/' + line + '.json', dataString, 'utf8', callback);
+    
 }
 
 function main() {
@@ -79,13 +81,17 @@ function main() {
     console.log('Requests: ' + requests);
     console.log('Skipped spots: ' + skipped);
     
-    exportItinerary(searchedLine, streets, function (err) {
-        if (err) throw err;
-        else {
-            console.log('Exported.');
-        }
-        process.exit(0);
-    });
+    try {
+        wait.for(exportItinerary, searchedLine, streets);
+        console.log('Exported to file.');
+        
+        var results = wait.for(RioBus.saveStreetItinerary, searchedLine, streets);
+        console.log('Exported to database.', results)
+    } catch (err) {
+        console.log('Error exporting data.', err)
+    }
+    
+    process.exit(0);        
 }
 
 wait.launchFiber(main);

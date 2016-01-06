@@ -4,9 +4,9 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var Config = require('./config');
 
-module.exports = {
-    db: null,
-    
+var db;
+
+module.exports = {    
     /**
      * Connect to database.
      */
@@ -15,14 +15,16 @@ module.exports = {
         var url = `${config.host}:${config.port}/${config.dbName}`;
         if (config.user!=='' && config.pass!=='') url = `${config.user}:${config.pass}@${url}`;
         url = 'mongodb://' + url;
-        MongoClient.connect(url, function(err, _db) { this.db = _db; callback(err, _db); });
+        MongoClient.connect(url, function(err, _db) { 
+            db = _db; callback(err);
+        });
     },
 
     /**
      * Finds itinerary for the specified bus line.
      */
     findItinerary: function (line, callback) {
-        var cursor = this.db.collection(Config.schema.itineraryCollection).find({ "line": line });
+        var cursor = db.collection(Config.schema.itineraryCollection).find({ "line": line });
         var spots = [];
 
         cursor.each(function(err, doc) {
@@ -33,5 +35,19 @@ module.exports = {
                 callback(err, spots);
             }
         });
+    },
+    
+    /**
+     * Save street itinerary on database.
+     */
+    saveStreetItinerary: function (line, streets, callback) {
+        db.collection(Config.schema.itineraryCollection).updateOne(
+            { "line": line },
+            {
+                "$set": { "streets": streets }
+            },
+            callback
+        );
     }
+    
 };
