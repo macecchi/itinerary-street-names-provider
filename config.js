@@ -16,5 +16,8 @@ module.exports = {
     },
     GoogleMaps: {
         key: 'AIzaSyBipo-V2cBGUWLbfwEcihDx5H8ZO89upuE'
+    },
+    OSRM: {
+        base_url: 'http://146.164.16.5:5000'
     }
 };

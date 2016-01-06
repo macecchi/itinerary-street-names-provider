@@ -24,7 +24,7 @@ function reverseGeocode(coordinates, callback) {
 }
 
 function reverseGeocodeOSRM(latlng, callback) {
-	request('http://router.project-osrm.org/nearest?loc=' + latlng, function (error, response, body) {
+	request(Config.OSRM.base_url + '/nearest?loc=' + latlng, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var result = JSON.parse(body);
             callback(error, result.name);

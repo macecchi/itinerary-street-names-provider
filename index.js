@@ -33,15 +33,9 @@ function addToItinerary(street) {
     return false;
 }
 
-function exportItinerary(line, data) {
-    fs.writeFile('itineraries/' + line + '.json', JSON.stringify(data, null, 4), function (err) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log('Exported.');
-        }
-    });
+function exportItinerary(line, data, callback) {
+    var dataString = JSON.stringify(data, null, 4);
+    fs.writeFile('itineraries/' + line + '.json', dataString, 'utf8', callback);
 }
 
 function main() {
@@ -85,8 +79,13 @@ function main() {
     console.log('Requests: ' + requests);
     console.log('Skipped spots: ' + skipped);
     
-    exportItinerary(searchedLine, streets);
-    process.exit(0);
+    exportItinerary(searchedLine, streets, function (err) {
+        if (err) throw err;
+        else {
+            console.log('Exported.');
+        }
+        process.exit(0);
+    });
 }
 
 wait.launchFiber(main);
