@@ -15,6 +15,9 @@ var streets = [];
 var lastStreet = '';
 var lastStreetCount = 0;
 
+var skipped = 0, requests = 0;
+var matchesCache = {};
+
 function addToItinerary(street) {
     if (lastStreet === street) {
         lastStreetCount++;
@@ -33,6 +36,23 @@ function addToItinerary(street) {
     return false;
 }
 
+function findStreetName(spot) {
+    var spotKey = JSON.stringify(spot);
+    var streetName;
+    
+    if (spotKey in matchesCache) {
+        skipped++;
+        streetName = matchesCache[spotKey];
+    }
+    else {
+        streetName = wait.for(Maps.reverseGeocode, spot);
+        matchesCache[spotKey] = streetName;
+        requests++;
+    }
+    
+    return streetName;
+}
+
 function exportItinerary(line, data, callback) {
     // Save to file
     var dataString = JSON.stringify(data, null, 4);
@@ -47,21 +67,10 @@ function main() {
     var spots = wait.for(RioBus.findItinerary, searchedLine);
     console.log('Loaded itinerary.');
 
-    var matchesCache = {};
-    var skipped = 0, requests = 0;
-
     console.log('Requesting reverse geocodes...');
     for (var spot of spots) {
-        var spotKey = JSON.stringify(spot);
-        if (spotKey in matchesCache) {
-            skipped++;
-            continue;
-        }
-
         try {
-            var streetName = wait.for(Maps.reverseGeocode, spot);
-            matchesCache[spotKey] = streetName;
-            requests++;
+            var streetName = findStreetName(spot); 
             
             if (streetName !== '') {
                 var added = addToItinerary(streetName);
@@ -85,8 +94,8 @@ function main() {
         wait.for(exportItinerary, searchedLine, streets);
         console.log('Exported to file.');
         
-        var results = wait.for(RioBus.saveStreetItinerary, searchedLine, streets);
-        console.log('Exported to database.', results)
+        wait.for(RioBus.saveStreetItinerary, searchedLine, streets);
+        console.log('Exported to database.')
     } catch (err) {
         console.log('Error exporting data.', err)
     }
