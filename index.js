@@ -64,9 +64,15 @@ function exportItinerary(line, data, callback) {
 function main() {
     wait.for(RioBus.connect);
 
-    console.log('Loading itinerary information...');
+    console.log('Loading itinerary for line ' + searchedLine + '...');
     var spots = wait.for(RioBus.findItinerary, searchedLine);
-    console.log('Loaded itinerary.');
+    if (spots.length > 0) {
+        console.log('Loaded itinerary with ' + spots.length + ' spots.');
+    }
+    else {
+        console.log('[ERROR] No itinerary found for line ' + searchedLine + '.');
+        process.exit(1);
+    }
 
     console.log('Requesting reverse geocodes...');
     for (var spot of spots) {

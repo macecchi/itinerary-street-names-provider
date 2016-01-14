@@ -4,14 +4,6 @@
         "returning": false
     },
     {
-        "location": "Linha Amarela",
-        "returning": false
-    },
-    {
-        "location": "Avenida Bento Ribeiro Dantas",
-        "returning": false
-    },
-    {
         "location": "Avenida Bento Ribeiro Dantas",
         "returning": false
     },
@@ -41,10 +33,6 @@
     },
     {
         "location": "Avenida Horácio Macedo",
-        "returning": false
-    },
-    {
-        "location": "Praça Samira Nahid Mesquita",
         "returning": false
     },
     {
@@ -93,10 +81,6 @@
     },
     {
         "location": "Avenida Horácio Macedo",
-        "returning": true
-    },
-    {
-        "location": "Praça Samira Nahid Mesquita",
         "returning": true
     },
     {
