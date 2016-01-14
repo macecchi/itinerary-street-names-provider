@@ -22,7 +22,8 @@ function addToItinerary(street, returning) {
     if (lastStreet === street) {
         lastStreetCount++;
         if (lastStreetCount == 4) {
-            if (streets.length == 0 || streets[streets.length - 1] !== street) {
+            var lastAddedStreet = streets[streets.length - 1];
+            if (streets.length == 0 || lastAddedStreet.location != street || lastAddedStreet.returning != returning) {
                 streets.push({ location: street, returning: returning });
                 return true;
             }
