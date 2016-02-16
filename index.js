@@ -1,11 +1,9 @@
 /* global process; */
 var Config = require('./config');
-var assert = require('assert');
 var RioBus = require('./riobus');
 var StreetIitinerary = require('./itinerary.js');
 var Maps = require('./maps');
 var wait = require('wait.for');
-var fs = require('fs');
 
 var searchedLine;
 if (process.argv.length > 2) {
@@ -53,7 +51,7 @@ function processLine(line) {
             if (streetName !== '') {
                 var added = streetItinerary.add(streetName, returning);
                 // console.log(streetName + (returning ? ' (returning)' : ''));
-                if (added) console.log('Partial itinerary: ', streetItinerary.streets);
+                // if (added) console.log('Partial itinerary: ', streetItinerary.streets);
             }
             else {
                 console.log('[WARNING] Street name returned empty.');
@@ -69,20 +67,11 @@ function processLine(line) {
     console.log('Skipped spots: ' + skipped);
     
     try {
-        wait.for(exportItineraryToFile, line, streetItinerary);
-        console.log('Exported to file.');
-        
         wait.for(RioBus.saveStreetItinerary, line, streetItinerary);
         console.log('Exported to database.')
     } catch (err) {
         console.log('Error exporting data.', err)
     }
-}
-
-function exportItineraryToFile(line, streetItinerary, callback) {
-    var data = streetItinerary.streets;
-    var dataString = JSON.stringify(data, null, 4);
-    fs.writeFile('itineraries/' + line.line + '.json', dataString, 'utf8', callback);
 }
 
 function main() {
