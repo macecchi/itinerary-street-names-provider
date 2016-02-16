@@ -22,26 +22,25 @@ module.exports = {
 
     /**
      * Finds itinerary for the specified bus line.
+     * @param {boolean} force - Force conversion of itinerary even if the line already
+     * has a street itinerary.
      */
-    findItineraryForLine: function (line, callback) {
-        db.collection(Config.schema.itineraryCollection).findOne({ "line": line }, callback);
+    findItineraryForLine: function (line, force, callback) {
+        var itineraryCollection = db.collection(Config.schema.itineraryCollection);
+        var searchParams = force ? { "line": line } : { "line": line, "streets": [] };
+        itineraryCollection.find(searchParams).limit(1).next(callback);
     },
     
     /**
-     * Finds all the itineraries.
+     * Finds all the itineraries that do not have a street itinerary defined or all
+     * if force` is specified.
+     * @param {boolean} force - Force conversion of itinerary for lines that already
+     * have a street itinerary.
      */
-    findItineraries: function (callback) {
-        var cursor = db.collection(Config.schema.itineraryCollection).find({});
-        var lines = [];
-
-        cursor.each(function(err, doc) {
-            assert.equal(err, null);
-            if (doc != null) {
-                lines.push(doc);
-            } else {
-                callback(err, lines);
-            }
-        });
+    findItineraries: function (force, callback) {
+        var itineraryCollection = db.collection(Config.schema.itineraryCollection);
+        var searchParams = force ? {} : { "streets": [] };
+        itineraryCollection.find(searchParams).toArray(callback);
     },
     
     

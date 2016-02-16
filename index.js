@@ -7,8 +7,9 @@ var wait = require('wait.for');
 
 var searchedLine;
 if (process.argv.length > 2) {
-    searchedLine = process.argv[process.argv.length - 1];
+    searchedLine = process.argv[2];
 }
+var force = process.argv.indexOf('--force') > -1;
 
 var matchesCache = {};
 
@@ -37,7 +38,7 @@ function processLine(line) {
         console.log('Loaded itinerary with ' + spots.length + ' spots.');
     }
     else {
-        console.log('[ERROR] No itinerary found for line ' + line + '.');
+        console.log('[ERROR] The line ' + line + ' does not have information about the itinerary coordinates.');
         process.exit(1);
     }
 
@@ -68,7 +69,7 @@ function processLine(line) {
     
     try {
         wait.for(RioBus.saveStreetItinerary, line, streetItinerary);
-        console.log('Exported to database.')
+        console.log('Exported line ' + line.line + ' to database.')
     } catch (err) {
         console.log('Error exporting data.', err)
     }
@@ -79,15 +80,27 @@ function main() {
 
     if (searchedLine) {
         console.log('Loading itinerary for line ' + searchedLine + '...');
-        var line = wait.for(RioBus.findItineraryForLine, searchedLine);
-        processLine(line);
+        
+        try {
+            var line = wait.for(RioBus.findItineraryForLine, searchedLine, force);
+            if (line) {
+                console.log('Loaded.');
+                processLine(line);
+            } else {
+                console.log('[ERROR] Could not find the line ' + searchedLine + ' or it has already got street information.');
+            }
+        } catch (err) {
+            console.log('Could not load itinerary.', err);
+            process.exit(1);
+        }
+        
         process.exit(0);
     }
     
     console.log('Loading all itineraries...');
     
     try {
-        var allLines = wait.for(RioBus.findItineraries);
+        var allLines = wait.for(RioBus.findItineraries, force);
         console.log('Loaded ' + allLines.length + ' lines.');
         for (var line of allLines) {
             console.log('Processing line ' + line.line + '...');
