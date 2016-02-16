@@ -23,28 +23,36 @@ module.exports = {
     /**
      * Finds itinerary for the specified bus line.
      */
-    findItinerary: function (line, callback) {
-        var cursor = db.collection(Config.schema.itineraryCollection).find({ "line": line });
-        var spots = [];
+    findItineraryForLine: function (line, callback) {
+        db.collection(Config.schema.itineraryCollection).findOne({ "line": line }, callback);
+    },
+    
+    /**
+     * Finds all the itineraries.
+     */
+    findItineraries: function (callback) {
+        var cursor = db.collection(Config.schema.itineraryCollection).find({});
+        var lines = [];
 
         cursor.each(function(err, doc) {
             assert.equal(err, null);
             if (doc != null) {
-                spots = doc.spots;
+                lines.push(doc);
             } else {
-                callback(err, spots);
+                callback(err, lines);
             }
         });
     },
     
+    
     /**
      * Save street itinerary on database.
      */
-    saveStreetItinerary: function (line, streets, callback) {
+    saveStreetItinerary: function (line, streetItinerary, callback) {
         db.collection(Config.schema.itineraryCollection).updateOne(
-            { "line": line },
+            { "line": line.line },
             {
-                "$set": { "streets": streets }
+                "$set": { "streets": streetItinerary.streets }
             },
             callback
         );

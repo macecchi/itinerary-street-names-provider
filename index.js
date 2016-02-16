@@ -2,40 +2,19 @@
 var Config = require('./config');
 var assert = require('assert');
 var RioBus = require('./riobus');
+var StreetIitinerary = require('./itinerary.js');
 var Maps = require('./maps');
 var wait = require('wait.for');
 var fs = require('fs');
 
-assert(process.argv.length > 2, 'Missing bus line parameter.');
+var searchedLine;
+if (process.argv.length > 2) {
+    searchedLine = process.argv[process.argv.length - 1];
+}
 
-var searchedLine = process.argv[process.argv.length - 1];
-assert(!isNaN(searchedLine), 'Missing bus line parameter.');
-
-var streets = [];
-var lastStreet = '';
-var lastStreetCount = 0;
-
-var skipped = 0, requests = 0;
 var matchesCache = {};
 
-function addToItinerary(street, returning) {
-    if (lastStreet === street) {
-        lastStreetCount++;
-        if (lastStreetCount == 4) {
-            var lastAddedStreet = streets[streets.length - 1];
-            if (streets.length == 0 || lastAddedStreet.location != street || lastAddedStreet.returning != returning) {
-                streets.push({ location: street, returning: returning });
-                return true;
-            }
-        }
-    }
-    else {
-        lastStreet = street;
-        lastStreetCount = 1;
-    }
-
-    return false;
-}
+var skipped = 0, requests = 0;
 
 function findStreetName(spot) {
     var spotKey = JSON.stringify(spot);
@@ -54,26 +33,17 @@ function findStreetName(spot) {
     return streetName;
 }
 
-function exportItinerary(line, data, callback) {
-    // Save to file
-    var dataString = JSON.stringify(data, null, 4);
-    fs.writeFile('itineraries/' + line + '.json', dataString, 'utf8', callback);
-    
-}
-
-function main() {
-    wait.for(RioBus.connect);
-
-    console.log('Loading itinerary for line ' + searchedLine + '...');
-    var spots = wait.for(RioBus.findItinerary, searchedLine);
+function processLine(line) {
+    var spots = line.spots;
     if (spots.length > 0) {
         console.log('Loaded itinerary with ' + spots.length + ' spots.');
     }
     else {
-        console.log('[ERROR] No itinerary found for line ' + searchedLine + '.');
+        console.log('[ERROR] No itinerary found for line ' + line + '.');
         process.exit(1);
     }
 
+    var streetItinerary = new StreetIitinerary();
     console.log('Requesting reverse geocodes...');
     for (var spot of spots) {
         try {
@@ -81,9 +51,9 @@ function main() {
             var returning = spot.returning;
             
             if (streetName !== '') {
-                var added = addToItinerary(streetName, returning);
-                console.log(streetName + (returning ? ' (returning)' : ''));
-                if (added) console.log('Partial itinerary: ', streets);
+                var added = streetItinerary.add(streetName, returning);
+                // console.log(streetName + (returning ? ' (returning)' : ''));
+                if (added) console.log('Partial itinerary: ', streetItinerary.streets);
             }
             else {
                 console.log('[WARNING] Street name returned empty.');
@@ -94,21 +64,51 @@ function main() {
         }
     }
 
-    console.log('Done!\n', streets);
+    console.log('Done!\n', streetItinerary.streets);
     console.log('Requests: ' + requests);
     console.log('Skipped spots: ' + skipped);
     
     try {
-        wait.for(exportItinerary, searchedLine, streets);
+        wait.for(exportItineraryToFile, line, streetItinerary);
         console.log('Exported to file.');
         
-        wait.for(RioBus.saveStreetItinerary, searchedLine, streets);
+        wait.for(RioBus.saveStreetItinerary, line, streetItinerary);
         console.log('Exported to database.')
     } catch (err) {
         console.log('Error exporting data.', err)
     }
+}
+
+function exportItineraryToFile(line, streetItinerary, callback) {
+    var data = streetItinerary.streets;
+    var dataString = JSON.stringify(data, null, 4);
+    fs.writeFile('itineraries/' + line.line + '.json', dataString, 'utf8', callback);
+}
+
+function main() {
+    wait.for(RioBus.connect);
+
+    if (searchedLine) {
+        console.log('Loading itinerary for line ' + searchedLine + '...');
+        var line = wait.for(RioBus.findItineraryForLine, searchedLine);
+        processLine(line);
+        process.exit(0);
+    }
     
-    process.exit(0);        
+    console.log('Loading all itineraries...');
+    
+    try {
+        var allLines = wait.for(RioBus.findItineraries);
+        console.log('Loaded ' + allLines.length + ' lines.');
+        for (var line of allLines) {
+            console.log('Processing line ' + line.line + '...');
+            processLine(line);
+        }
+    } catch (err) {
+        console.log('Error loading itineraries.', err);
+    }
+    
+     process.exit(0);
 }
 
 wait.launchFiber(main);
