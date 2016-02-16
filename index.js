@@ -34,13 +34,12 @@ function findStreetName(spot) {
 
 function processLine(line) {
     var spots = line.spots;
-    if (spots.length > 0) {
-        console.log('Loaded itinerary with ' + spots.length + ' spots.');
+    if (spots.length == 0) {
+        console.log('[ERROR] The line ' + line.line + ' does not have information about the itinerary coordinates.');
+        return;
     }
-    else {
-        console.log('[ERROR] The line ' + line + ' does not have information about the itinerary coordinates.');
-        process.exit(1);
-    }
+   
+   console.log('Loaded itinerary with ' + spots.length + ' spots.');
 
     var streetItinerary = new StreetIitinerary();
     console.log('Requesting reverse geocodes...');
@@ -59,7 +58,7 @@ function processLine(line) {
             }  
         } catch (err) {
             console.log('[ERROR]', err);
-            process.exit(2);
+            return;
         }
     }
 
