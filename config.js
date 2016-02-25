@@ -18,6 +18,7 @@ module.exports = {
         key: 'AIzaSyBipo-V2cBGUWLbfwEcihDx5H8ZO89upuE'
     },
     OSRM: {
-        base_url: 'http://146.164.16.5:5000'
+        host: process.env.RIOBUS_OSRM_HOST   || 'localhost',
+        port: process.env.RIOBUS_OSRM_PORT   || 5000
     }
 };
