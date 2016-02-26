@@ -1,12 +1,22 @@
 'use strict';
-class StreetItinerary {
-    constructor() {
-        this.streets = [];
+/**
+ * Describes a Itinerary instance
+ * @class {Itinerary}
+ */
+class Itinerary {
+	
+	constructor(line, description, agency, keywords, spots, streets) {
+		this.line = (!line || line==='')? 'indefinido' : line.toString();
+		this.description = (!description || description==='')? 'desconhecido' : description;
+		this.agency = agency || '';
+		this.keywords = keywords || '';
+		this.spots = spots || [];
+		this.streets = streets || [];
         this.lastStreetCount = 0;
         this.lastStreet = '';
-    }
+	}
     
-    add(street, returning) {
+    addStreet(street, returning) {
         if (this.lastStreet === street) {
             this.lastStreetCount++;
             if (this.lastStreetCount == 4) {
@@ -25,4 +35,4 @@ class StreetItinerary {
         return false;
     }
 }
-module.exports = StreetItinerary;
+module.exports = Itinerary;
